@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRISK SOUL BATTLE - 2D Action Boss Battle</title>
+  <meta name="description" content=" Undertale-inspired retro bullet hell game where you dodge boss bullets as Frisk's red heart and shoot back to win.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <button id="sound-toggle">🔊 SOUND ON</button>
+
+  <div id="game-container">
+    <!-- Game Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- HUD Overlay -->
+    <div id="hud">
+      <div class="hud-panel">
+        <div>PLAYER HP</div>
+        <div class="hp-bar-container">
+          <div class="hp-bar">
+            <div id="player-hp-fill" class="hp-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hud-panel" style="text-align: right;">
+        <div>BOSS HP</div>
+        <div class="hp-bar-container">
+          <div class="hp-bar">
+            <div id="boss-hp-fill" class="hp-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Status Effect Badges -->
+    <div class="status-effects">
+      <div id="badge-speed" class="badge badge-speed hidden">⚡ SPEED BOOST ACTIVE! (1.5x speed)</div>
+    </div>
+
+    <!-- Screens Overlays -->
+    <!-- 1. Start Screen -->
+    <div id="overlay-start" class="overlay">
+      <h1 class="title">FRISK<br><span>SOUL BATTLE</span></h1>
+      <div class="instructions">
+        <p><strong>【操作方法】</strong></p>
+        <p>移動: 矢印キー（または W, A, S, D）</p>
+        <p>攻撃: スペースキー</p>
+        <br>
+        <p><strong>【アイテム効果】</strong></p>
+        <p><span style="color: var(--color-item-speed);">⚡ 緑の稲妻</span>: 移動＆敵の弾速が 1.5 倍に上昇 (8秒)</p>
+        <p><span style="color: var(--color-item-heal);">✚ オレンジの十字</span>: プレイヤーの体力が全回復</p>
+      </div>
+      <button id="btn-start" class="btn">BATTLE START</button>
+    </div>
+
+    <!-- 2. Game Over Screen -->
+    <div id="overlay-gameover" class="overlay hidden">
+      <h1 class="title gameover-text">GAME OVER</h1>
+      <div class="instructions">
+        <p>ソウルが砕け散ってしまった...</p>
+        <p>もう一度挑戦しますか？</p>
+      </div>
+      <button id="btn-restart" class="btn">RETRY</button>
+    </div>
+
+    <!-- 3. Victory Screen -->
+    <div id="overlay-victory" class="overlay hidden">
+      <h1 class="title victory-text">VICTORY!</h1>
+      <div class="instructions">
+        <p>見事に強敵を撃破した！</p>
+        <p>あなたの決意が未来を切り開いた。</p>
+      </div>
+      <button id="btn-restart-victory" class="btn">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
