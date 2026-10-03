@@ -254,7 +254,7 @@ class Player {
     this.hp = 30;
     this.maxHp = 30;
     this.lastShot = 0;
-    this.shootCooldown = 150; // ms
+    this.shootCooldown = 20000; // 20 seconds
   }
 
   update(dt) {
@@ -617,7 +617,7 @@ function checkCollisions() {
     const dist = Math.sqrt(dx * dx + dy * dy);
     
     if (dist < pb.radius + boss.radius) {
-      boss.takeDamage(10);
+      boss.takeDamage(2);
       playerBullets.splice(i, 1);
     }
   }
