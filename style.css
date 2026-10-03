@@ -21,7 +21,7 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #0c0c14;
   color: var(--color-text);
   font-family: var(--font-mono);
   overflow: hidden;
@@ -29,6 +29,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: 
+    radial-gradient(#ff2a6d 6px, transparent 7px),
+    radial-gradient(#ff2a6d 6px, transparent 7px);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
 }
 
 #game-container {

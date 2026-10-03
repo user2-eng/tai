@@ -661,6 +661,31 @@ function cleanupEntities() {
   items = items.filter(item => item.y < HEIGHT + 20);
 }
 
+// Draw Polka Dot Background (matching enemy bullets in size r=6 and color #ff2a6d)
+function drawPolkaDotBackground() {
+  ctx.fillStyle = '#0c0c14';
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.save();
+  ctx.shadowBlur = 8;
+  ctx.shadowColor = '#ff2a6d';
+  ctx.fillStyle = '#ff2a6d';
+
+  const dotRadius = 6; // Same radius as BossBullet
+  const spacing = 36;  // Polka dot grid spacing
+
+  for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+    const rowOffset = (Math.floor(y / spacing) % 2 === 0) ? 0 : spacing / 2;
+    for (let x = rowOffset + spacing / 2; x < WIDTH; x += spacing) {
+      ctx.beginPath();
+      ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
 // Game Core Loop variables
 let lastTime = 0;
 
@@ -671,8 +696,8 @@ function gameLoop(timestamp) {
   const dt = timestamp - lastTime;
   lastTime = timestamp;
 
-  // Clear Canvas
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  // Render Polka Dot Background (Same color & size as boss bullets)
+  drawPolkaDotBackground();
 
   // Update logic
   player.update(dt);
