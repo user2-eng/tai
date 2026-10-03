@@ -255,8 +255,6 @@ class Player {
     this.maxHp = 100;
     this.lastShot = 0;
     this.shootCooldown = 150; // ms
-    this.invulnerable = false;
-    this.invulnerableTimer = 0;
   }
 
   update(dt) {
@@ -282,14 +280,6 @@ class Player {
     this.x = Math.max(this.size, Math.min(WIDTH - this.size, this.x));
     this.y = Math.max(this.size, Math.min(HEIGHT - this.size, this.y));
 
-    // Invulnerability flashing
-    if (this.invulnerable) {
-      this.invulnerableTimer -= dt;
-      if (this.invulnerableTimer <= 0) {
-        this.invulnerable = false;
-      }
-    }
-
     // Shooting
     if (keys['Space']) {
       const now = Date.now();
@@ -302,10 +292,6 @@ class Player {
   }
 
   draw() {
-    if (this.invulnerable && Math.floor(Date.now() / 80) % 2 === 0) {
-      return; // Skip drawing to simulate flashing
-    }
-
     ctx.save();
     ctx.translate(this.x, this.y);
     
@@ -326,10 +312,7 @@ class Player {
   }
 
   takeDamage(amount) {
-    if (this.invulnerable) return;
     this.hp = Math.max(0, this.hp - amount);
-    this.invulnerable = true;
-    this.invulnerableTimer = 1000; // 1 second invulnerability
     audio.playHit();
     
     // Update HTML HP Bar
