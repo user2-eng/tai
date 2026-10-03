@@ -250,7 +250,7 @@ class Player {
     this.x = WIDTH / 2;
     this.y = HEIGHT - 100;
     this.size = 14; // Heart bounding size
-    this.baseSpeed = 2.0;
+    this.baseSpeed = 7.0;
     this.hp = 30;
     this.maxHp = 30;
     this.lastShot = 0;
