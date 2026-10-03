@@ -661,58 +661,109 @@ function cleanupEntities() {
   items = items.filter(item => item.y < HEIGHT + 20);
 }
 
-// Dynamic Op-Art / Hypnotic Optical Illusion Background
+// Dynamic High-Density Op-Art & Hypnotic Optical Illusion Background
 function drawOpticalIllusion(timestamp) {
-  const time = timestamp * 0.0008;
+  const time = timestamp * 0.001;
   const centerX = WIDTH / 2;
   const centerY = HEIGHT / 2;
 
   // Base background fill
-  ctx.fillStyle = '#0a0a14';
+  ctx.fillStyle = '#05050e';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
   ctx.save();
+
+  // Layer 1: Animated Cyber Matrix Grid
+  ctx.strokeStyle = 'rgba(5, 217, 232, 0.08)';
+  ctx.lineWidth = 1;
+  const gridSize = 40;
+  const offsetX = (time * 25) % gridSize;
+  const offsetY = (time * 15) % gridSize;
+
+  ctx.beginPath();
+  for (let x = -gridSize + offsetX; x < WIDTH + gridSize; x += gridSize) {
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, HEIGHT);
+  }
+  for (let y = -gridSize + offsetY; y < HEIGHT + gridSize; y += gridSize) {
+    ctx.moveTo(0, y);
+    ctx.lineTo(WIDTH, y);
+  }
+  ctx.stroke();
+
+  // Layer 2: Complex Dual Hypnotic Spiral Rings (Op-Art & Moiré Interference)
   ctx.translate(centerX, centerY);
 
-  const maxRadius = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT) * 0.55;
-  const ringCount = 16;
-  const segmentCount = 24;
+  const maxRadius = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT) * 0.6;
+  const ringCount = 20;
+  const segmentCount = 32;
 
   for (let r = ringCount; r > 0; r--) {
     const radius = (r / ringCount) * maxRadius;
     const innerRadius = ((r - 1) / ringCount) * maxRadius;
     
-    // Alternating ring rotation to create a powerful rotary optical motion illusion
+    // Wave distortion on ring radii for moiré organic wobble
+    const wave = Math.sin(time * 2 + r * 0.5) * 4;
+    const currentRadius = Math.max(0, radius + wave);
+
     const dir = r % 2 === 0 ? 1 : -1;
-    const rotSpeed = 0.35 + (r * 0.02);
-    const rotation = time * rotSpeed * dir + Math.sin(time * 0.8 + r * 0.3) * 0.2;
+    const rotSpeed = 0.25 + (r * 0.015);
+    const rotation = time * rotSpeed * dir + Math.sin(time * 0.6 + r * 0.25) * 0.35;
 
     for (let s = 0; s < segmentCount; s++) {
       const startAngle = rotation + (s * Math.PI * 2) / segmentCount;
       const endAngle = rotation + ((s + 1) * Math.PI * 2) / segmentCount;
 
       ctx.beginPath();
-      ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.arc(0, 0, currentRadius, startAngle, endAngle);
       ctx.arc(0, 0, innerRadius, endAngle, startAngle, true);
       ctx.closePath();
 
       const isAlt = (s + r) % 2 === 0;
       if (isAlt) {
-        ctx.fillStyle = 'rgba(12, 12, 22, 0.95)';
+        ctx.fillStyle = 'rgba(10, 10, 20, 0.92)';
       } else {
-        // Subtle trippy glow colors (hue shifting)
-        const hue = (r * 15 + time * 50) % 360;
-        ctx.fillStyle = `hsla(${hue}, 80%, 40%, 0.22)`;
+        const hue = (r * 18 + s * 5 + time * 40) % 360;
+        ctx.fillStyle = `hsla(${hue}, 85%, 35%, 0.25)`;
       }
       ctx.fill();
     }
-    
-    // Concentric ring dividing line for Fraser spiral illusion effect
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+
+    // High-density concentric tick marks on rings
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.09)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.arc(0, 0, currentRadius, 0, Math.PI * 2);
     ctx.stroke();
+  }
+
+  // Layer 3: Dynamic Rotating Geometric Op-Art Star Spokes
+  const polyCount = 12;
+  const polyAngle = time * 0.5;
+  ctx.strokeStyle = 'rgba(255, 42, 109, 0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let i = 0; i < polyCount; i++) {
+    const a1 = polyAngle + (i * Math.PI * 2) / polyCount;
+    const a2 = -polyAngle * 1.5 + (i * Math.PI * 2) / polyCount;
+    ctx.moveTo(Math.cos(a1) * 60, Math.sin(a1) * 60);
+    ctx.lineTo(Math.cos(a2) * 280, Math.sin(a2) * 280);
+  }
+  ctx.stroke();
+
+  // Layer 4: Floating Dynamic Optical Particles / Data Nodes
+  const particleCount = 24;
+  for (let i = 0; i < particleCount; i++) {
+    const pAngle = time * (0.2 + (i % 3) * 0.1) + (i * Math.PI * 2) / particleCount;
+    const pDist = 80 + ((i * 17 + time * 40) % 260);
+    const px = Math.cos(pAngle) * pDist;
+    const py = Math.sin(pAngle) * pDist;
+    const pSize = 2 + (i % 4);
+
+    ctx.fillStyle = (i % 2 === 0) ? 'rgba(0, 254, 155, 0.35)' : 'rgba(5, 217, 232, 0.35)';
+    ctx.beginPath();
+    ctx.arc(px, py, pSize, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   ctx.restore();
