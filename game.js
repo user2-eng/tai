@@ -251,8 +251,8 @@ class Player {
     this.y = HEIGHT - 100;
     this.size = 14; // Heart bounding size
     this.baseSpeed = 4.5;
-    this.hp = 100;
-    this.maxHp = 100;
+    this.hp = 30;
+    this.maxHp = 30;
     this.lastShot = 0;
     this.shootCooldown = 150; // ms
   }
