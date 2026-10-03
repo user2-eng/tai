@@ -661,6 +661,63 @@ function cleanupEntities() {
   items = items.filter(item => item.y < HEIGHT + 20);
 }
 
+// Dynamic Op-Art / Hypnotic Optical Illusion Background
+function drawOpticalIllusion(timestamp) {
+  const time = timestamp * 0.0008;
+  const centerX = WIDTH / 2;
+  const centerY = HEIGHT / 2;
+
+  // Base background fill
+  ctx.fillStyle = '#0a0a14';
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  ctx.save();
+  ctx.translate(centerX, centerY);
+
+  const maxRadius = Math.sqrt(WIDTH * WIDTH + HEIGHT * HEIGHT) * 0.55;
+  const ringCount = 16;
+  const segmentCount = 24;
+
+  for (let r = ringCount; r > 0; r--) {
+    const radius = (r / ringCount) * maxRadius;
+    const innerRadius = ((r - 1) / ringCount) * maxRadius;
+    
+    // Alternating ring rotation to create a powerful rotary optical motion illusion
+    const dir = r % 2 === 0 ? 1 : -1;
+    const rotSpeed = 0.35 + (r * 0.02);
+    const rotation = time * rotSpeed * dir + Math.sin(time * 0.8 + r * 0.3) * 0.2;
+
+    for (let s = 0; s < segmentCount; s++) {
+      const startAngle = rotation + (s * Math.PI * 2) / segmentCount;
+      const endAngle = rotation + ((s + 1) * Math.PI * 2) / segmentCount;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.arc(0, 0, innerRadius, endAngle, startAngle, true);
+      ctx.closePath();
+
+      const isAlt = (s + r) % 2 === 0;
+      if (isAlt) {
+        ctx.fillStyle = 'rgba(12, 12, 22, 0.95)';
+      } else {
+        // Subtle trippy glow colors (hue shifting)
+        const hue = (r * 15 + time * 50) % 360;
+        ctx.fillStyle = `hsla(${hue}, 80%, 40%, 0.22)`;
+      }
+      ctx.fill();
+    }
+    
+    // Concentric ring dividing line for Fraser spiral illusion effect
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
 // Game Core Loop variables
 let lastTime = 0;
 
@@ -671,8 +728,8 @@ function gameLoop(timestamp) {
   const dt = timestamp - lastTime;
   lastTime = timestamp;
 
-  // Clear Canvas
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  // Render Dynamic Optical Illusion Background
+  drawOpticalIllusion(timestamp);
 
   // Update logic
   player.update(dt);

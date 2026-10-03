@@ -21,7 +21,7 @@
 }
 
 body {
-  background-color: var(--color-bg);
+  background-color: #06060c;
   color: var(--color-text);
   font-family: var(--font-mono);
   overflow: hidden;
@@ -29,18 +29,24 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: 
-    radial-gradient(ellipse at center, rgba(20, 20, 35, 0.8) 0%, rgba(5, 5, 10, 1) 100%),
-    linear-gradient(0deg, rgba(255, 42, 109, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 42, 109, 0.05) 1px, transparent 1px);
-  background-size: cover, 40px 40px, 40px 40px;
-  background-position: center;
-  animation: gridMove 20s linear infinite;
+  position: relative;
 }
 
-@keyframes gridMove {
-  from { background-position: center, 0 0, 0 0; }
-  to { background-position: center, 0 400px, 400px 0; }
+body::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-conic-gradient(from 0deg, rgba(25, 25, 45, 0.85) 0deg 15deg, rgba(5, 5, 12, 0.95) 15deg 30deg);
+  animation: illusionSpin 60s linear infinite;
+  z-index: -1;
+}
+
+@keyframes illusionSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 #game-container {
