@@ -356,18 +356,18 @@ class Boss {
     // Periodically switch basic target patterns based on HP thresholds
     const hpPercent = this.hp / this.maxHp;
     
-    let fireInterval = 300;
+    let fireInterval = 250;
     if (hpPercent > 0.7) {
-      // Phase 1: Simple shooting patterns
-      fireInterval = 400;
+      // Phase 1: 5-bullet spread pattern
+      fireInterval = 250;
       this.shootPattern1(dt, fireInterval);
     } else if (hpPercent > 0.3) {
-      // Phase 2: Double streams & helix
-      fireInterval = 250;
+      // Phase 2: Quad streams & targeted spread
+      fireInterval = 150;
       this.shootPattern2(dt, fireInterval);
     } else {
-      // Phase 3: Crazy bullet rain & spirals
-      fireInterval = 150;
+      // Phase 3: Intense hex spirals & ring bursts
+      fireInterval = 90;
       this.shootPattern3(dt, fireInterval);
     }
   }
@@ -423,12 +423,11 @@ class Boss {
       this.shootTimer = 0;
       audio.playBossShoot();
 
-      // Aimed shot directly at player
+      // Aimed shot directly at player (5-bullet spread)
       const angleToPlayer = Math.atan2(player.y - this.y, player.x - this.x);
       
-      // Shoot a 3-bullet spread towards player
-      for (let i = -1; i <= 1; i++) {
-        const spreadAngle = angleToPlayer + (i * 0.18);
+      for (let i = -2; i <= 2; i++) {
+        const spreadAngle = angleToPlayer + (i * 0.15);
         bossBullets.push(new BossBullet(this.x, this.y, spreadAngle, 4));
       }
     }
@@ -442,37 +441,40 @@ class Boss {
       this.shootTimer = 0;
       audio.playBossShoot();
 
-      // Dual spiral streams
-      bossBullets.push(new BossBullet(this.x, this.y, this.angle, 3.5));
-      bossBullets.push(new BossBullet(this.x, this.y, this.angle + Math.PI, 3.5));
+      // Quad spiral streams
+      for (let i = 0; i < 4; i++) {
+        bossBullets.push(new BossBullet(this.x, this.y, this.angle + (i * Math.PI / 2), 3.8));
+      }
 
-      // Occasional target bullet
-      if (Math.random() < 0.4) {
+      // Aimed spread shot
+      if (Math.random() < 0.5) {
         const targetAngle = Math.atan2(player.y - this.y, player.x - this.x);
-        bossBullets.push(new BossBullet(this.x, this.y, targetAngle, 5));
+        for (let i = -1; i <= 1; i++) {
+          bossBullets.push(new BossBullet(this.x, this.y, targetAngle + (i * 0.16), 4.5));
+        }
       }
     }
   }
 
   shootPattern3(dt, interval) {
     this.shootTimer += dt;
-    this.angle += 0.15 * getSpeedMultiplier();
+    this.angle += 0.12 * getSpeedMultiplier();
     
     if (this.shootTimer >= interval) {
       this.shootTimer = 0;
       audio.playBossShoot();
 
-      // Quad spiral streams
-      for (let i = 0; i < 4; i++) {
-        bossBullets.push(new BossBullet(this.x, this.y, this.angle + (i * Math.PI / 2), 4));
+      // Hex spiral streams
+      for (let i = 0; i < 6; i++) {
+        bossBullets.push(new BossBullet(this.x, this.y, this.angle + (i * Math.PI / 3), 4));
       }
 
-      // Random circular burst at intervals
-      if (Math.random() < 0.3) {
-        const burstCount = 10;
+      // Frequent circular ring burst
+      if (Math.random() < 0.4) {
+        const burstCount = 14;
         for (let i = 0; i < burstCount; i++) {
-          const angle = (i * Math.PI * 2) / burstCount;
-          bossBullets.push(new BossBullet(this.x, this.y, angle, 3));
+          const angle = (i * Math.PI * 2) / burstCount + (this.angle * 0.5);
+          bossBullets.push(new BossBullet(this.x, this.y, angle, 3.2));
         }
       }
     }
