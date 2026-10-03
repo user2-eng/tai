@@ -231,7 +231,7 @@ let gameState = STATE_START;
 // Speed Boost State
 let speedBoostActive = false;
 let speedBoostTimer = 0;
-const SPEED_BOOST_DURATION = 8000; // 8 seconds
+const SPEED_BOOST_DURATION = 16000; // 16 seconds
 
 // Game Entities
 let player;
@@ -242,7 +242,7 @@ let items = [];
 
 // Base Speed Multipliers
 function getSpeedMultiplier() {
-  return speedBoostActive ? 1.5 : 1.0;
+  return speedBoostActive ? 3.0 : 1.0;
 }
 
 class Player {
@@ -556,9 +556,9 @@ class BossBullet {
   }
 }
 
-// Items: 1 = Speed Up, 2 = Heal
+// Items: 1 = Speed Up
 class Item {
-  constructor(x, y, type) {
+  constructor(x, y, type = 1) {
     this.x = x;
     this.y = y;
     this.type = type;
@@ -577,28 +577,19 @@ class Item {
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle);
 
-    if (this.type === 1) {
-      // Speed Up - Lightning Bolt shape in green
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = '#00fe9b';
-      ctx.fillStyle = '#00fe9b';
-      ctx.beginPath();
-      ctx.moveTo(0, -10);
-      ctx.lineTo(6, -2);
-      ctx.lineTo(1, -2);
-      ctx.lineTo(4, 10);
-      ctx.lineTo(-6, 2);
-      ctx.lineTo(-1, 2);
-      ctx.closePath();
-      ctx.fill();
-    } else {
-      // Full Heal - Glowing Cross in Orange/Yellow
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = '#ff851b';
-      ctx.fillStyle = '#ff851b';
-      ctx.fillRect(-4, -10, 8, 20);
-      ctx.fillRect(-10, -4, 20, 8);
-    }
+    // Speed Up - Lightning Bolt shape in green
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#00fe9b';
+    ctx.fillStyle = '#00fe9b';
+    ctx.beginPath();
+    ctx.moveTo(0, -10);
+    ctx.lineTo(6, -2);
+    ctx.lineTo(1, -2);
+    ctx.lineTo(4, 10);
+    ctx.lineTo(-6, 2);
+    ctx.lineTo(-1, 2);
+    ctx.closePath();
+    ctx.fill();
 
     ctx.restore();
   }
@@ -617,9 +608,8 @@ function updateSpawners(dt) {
     const rx = Math.random() * (WIDTH - 100) + 50;
     const ry = -20;
     
-    // Choose type: 1 (Speed Up) or 2 (Full Heal)
-    const type = Math.random() < 0.5 ? 1 : 2;
-    items.push(new Item(rx, ry, type));
+    // Always spawn Speed Up item
+    items.push(new Item(rx, ry, 1));
   }
 
   // Update speed boost active timers
@@ -669,16 +659,11 @@ function checkCollisions() {
     const dist = Math.sqrt(dx * dx + dy * dy);
 
     if (dist < item.radius + player.size) {
-      if (item.type === 1) {
-        // Speed boost
-        speedBoostActive = true;
-        speedBoostTimer = SPEED_BOOST_DURATION;
-        document.getElementById('badge-speed').classList.remove('hidden');
-        audio.playSpeedUp();
-      } else {
-        // Heal
-        player.heal();
-      }
+      // Speed boost
+      speedBoostActive = true;
+      speedBoostTimer = SPEED_BOOST_DURATION;
+      document.getElementById('badge-speed').classList.remove('hidden');
+      audio.playSpeedUp();
       items.splice(i, 1);
     }
   }
