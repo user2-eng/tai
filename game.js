@@ -524,6 +524,23 @@ class BossBullet {
   }
 
   update() {
+    if (player) {
+      const targetAngle = Math.atan2(player.y - this.y, player.x - this.x);
+      let diff = targetAngle - this.angle;
+
+      // Normalize diff angle range to [-PI, PI]
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+
+      // Homing steering turn rate
+      const turnRate = 0.025;
+      if (Math.abs(diff) < turnRate) {
+        this.angle = targetAngle;
+      } else {
+        this.angle += Math.sign(diff) * turnRate;
+      }
+    }
+
     const currentSpeed = this.speed * getSpeedMultiplier();
     this.x += Math.cos(this.angle) * currentSpeed;
     this.y += Math.sin(this.angle) * currentSpeed;
